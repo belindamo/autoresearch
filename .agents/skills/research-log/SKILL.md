@@ -2,7 +2,11 @@
 
 name: research-log
 
-description: Workspace research logging convention with a master research_log.md and detailed session logs in /logs
+description: >-
+
+Workspace research logging convention with a master research_log.md and
+
+detailed session logs in /logs
 
 ---
 
@@ -55,10 +59,11 @@ When completing a work session:
 3. **Never rewrite past bullets** — only append new ones.
 4. **Update the dashboard** — As a final step, update `/workspace/index.html` to visually reflect the latest results. If a `generate_dashboard.py` script exists, run it. Otherwise, update the HTML directly. The dashboard should always reflect the current state of the research.
 5. **Commit and push changes** — After updating the dashboard, commit all session artifacts and push to remote:
-   - Stage the new session log, updated `research_log.md`, and updated `index.html`
-   - Commit with a message summarizing the experiment: `experiment N: <short description>` and include the key result (val_bpb and ✓/✗) in the commit body
-   - Push to remote: `git push`
-   - This ensures every experiment is version-controlled and the remote stays up to date
+    - Stage the new session log, updated `research_log.md`, and updated `index.html`
+
+- Commit with a message summarizing the session: `session N: <short description>` and include the key result in the commit body
+- Push to remote: `git push`
+- This ensures every experiment is version-controlled and the remote stays up to date
 
 When starting a work session:
 
