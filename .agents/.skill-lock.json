@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "project:research-log": {
+      "name": "research-log",
+      "scope": "project",
+      "source": "research-log",
+      "sourceType": "hub",
+      "hubSkillId": "e1290e83-5fb3-4111-bd84-6a0a9f863c3d",
+      "hubSkillVersionId": "b128a9b2-843b-4a75-815d-362f9f46a0eb",
+      "hubVersion": "1",
+      "installMode": "symlink",
+      "installedAt": "2026-03-12T23:32:03.734Z",
+      "updatedAt": "2026-03-12T23:32:10.082Z"
+    },
+    "project:skill": {
+      "name": "skill",
+      "scope": "project",
+      "source": "skill",
+      "sourceType": "hub",
+      "hubSkillId": "1f4313ff-2493-452a-bf83-88464dd1b965",
+      "hubSkillVersionId": "9d62ee38-df05-487d-a4ce-033aefbd2b92",
+      "hubVersion": "1",
+      "installMode": "symlink",
+      "installedAt": "2026-03-13T01:53:10.523Z",
+      "updatedAt": "2026-03-13T01:53:10.523Z"
+    }
+  }
+}

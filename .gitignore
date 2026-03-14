@@ -21,3 +21,13 @@ dev/
 
 # Results file
 results.tsv
+
+# System / platform
+.claude-homes/
+.logs/
+.mirror_state.json
+.npm/
+.sundial/
+
+# Autoresearch has its own git repo
+autoresearch/
