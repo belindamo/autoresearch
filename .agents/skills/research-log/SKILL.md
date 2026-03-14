@@ -62,7 +62,7 @@ When completing a work session:
     - Stage the new session log, updated `research_log.md`, and updated `index.html`
 
 - Commit with a message summarizing the session: `session N: <short description>` and include the key result in the commit body
-- Push to main: `git push origin main`
+- Push to master: `git push origin master`
 - This ensures every experiment is version-controlled and the remote stays up to date
 
 When starting a work session:
