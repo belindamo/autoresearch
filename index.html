@@ -183,8 +183,8 @@
       </div>
       <div class="kpi">
         <div class="kpi-label">Experiments Run</div>
-        <div class="kpi-value">19</div>
-        <div class="kpi-sub">Across 20 sessions</div>
+        <div class="kpi-value">20</div>
+        <div class="kpi-sub">Across 21 sessions</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Improvement</div>
@@ -280,42 +280,47 @@
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
           <tr>
-            <td>11</td><td>2</td><td>Halve batch size again: 2^18 → 2^17 with DEVICE</td>
+            <td>11</td><td>21</td><td>Increase Adam beta1 from 0.8 to 0.9</td>
+            <td>1.0517</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>12</td><td>2</td><td>Halve batch size again: 2^18 → 2^17 with DEVICE</td>
             <td>1.0472</td><td>1357</td><td>22.7 GB</td>
             <td><span class="badge badge-keep">keep</span></td>
           </tr>
           <tr>
-            <td>12</td><td>3</td><td>Halve batch size further: 2^17 → 2^16 with DEVICE</td>
+            <td>13</td><td>3</td><td>Halve batch size further: 2^17 → 2^16 with DEVICE</td>
             <td>1.0584</td><td>2557</td><td>11.5 GB</td>
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
           <tr>
-            <td>13</td><td>4</td><td>Increase embedding LR from 0.6 to 1.0</td>
+            <td>14</td><td>4</td><td>Increase embedding LR from 0.6 to 1.0</td>
             <td>1.0458</td><td>1348</td><td>22.7 GB</td>
             <td><span class="badge badge-keep">keep</span></td>
           </tr>
           <tr>
-            <td>14</td><td>5</td><td>Compound: add 2% warmup + increase matrix LR 0.06 → 0.08</td>
+            <td>15</td><td>5</td><td>Compound: add 2% warmup + increase matrix LR 0.06 → 0.08</td>
             <td>1.0437</td><td>1495</td><td>22.7 GB</td>
             <td><span class="badge badge-keep">keep</span></td>
           </tr>
           <tr>
-            <td>15</td><td>6</td><td>Reduce warmdown ratio from 0.67 to 0.5</td>
+            <td>16</td><td>6</td><td>Reduce warmdown ratio from 0.67 to 0.5</td>
             <td>1.0557</td><td>1321</td><td>22.7 GB</td>
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
           <tr>
-            <td>16</td><td>7</td><td>Reduce weight decay from 0.2 to 0.1</td>
+            <td>17</td><td>7</td><td>Reduce weight decay from 0.2 to 0.1</td>
             <td>1.0420</td><td>1463</td><td>—</td>
             <td><span class="badge badge-keep">keep</span></td>
           </tr>
           <tr>
-            <td>17</td><td>8</td><td>Reduce weight decay from 0.1 to 0.05</td>
+            <td>18</td><td>8</td><td>Reduce weight decay from 0.1 to 0.05</td>
             <td>1.0395</td><td>1517</td><td>—</td>
             <td><span class="badge badge-keep">keep</span></td>
           </tr>
           <tr>
-            <td>18</td><td>9</td><td>Reduce weight decay from 0.05 to 0.025</td>
+            <td>19</td><td>9</td><td>Reduce weight decay from 0.05 to 0.025</td>
             <td>1.0437</td><td>1418</td><td>—</td>
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
@@ -349,6 +354,7 @@
           <li>Increase embedding LR from 1.0 to 1.5 → 1.0475</li>
           <li>Lower matrix LR from 0.08 to 0.07 → 1.0473</li>
           <li>Increase FINAL → 1.0472</li>
+          <li>Increase Adam beta1 from 0.8 to 0.9 → 1.0517</li>
           <li>Halve batch size further: 2^17 → 2^16 with DEVICE → 1.0584</li>
           <li>Reduce warmdown ratio from 0.67 to 0.5 → 1.0557</li>
           <li>Reduce weight decay from 0.05 to 0.025 → 1.0437</li>
@@ -392,11 +398,11 @@
     Chart.defaults.borderColor = '#30363d';
     Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 
-    const labels = ["#0 S10", "#1 S11", "#2 S12", "#3 S13", "#4 S14", "#5 S15", "#6 S16", "#7 S17", "#8 S18", "#9 S19", "#10 S20", "#11 S2", "#12 S3", "#13 S4", "#14 S5", "#15 S6", "#16 S7", "#17 S8", "#18 S9"];
-    const bpbData = [1.044, 1.0401, 1.0401, 1.0413, 1.0468, 1.0387, 1.05, 1.0408, 1.0475, 1.0473, 1.0472, 1.0472, 1.0584, 1.0458, 1.0437, 1.0557, 1.042, 1.0395, 1.0437];
-    const stepsData = [1486, 1504, 1504, 1, 1, 1, 1, 1, 1, 1, 1, 1357, 2557, 1348, 1495, 1321, 1463, 1517, 1418];
-    const vramData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.7, 11.5, 22.7, 22.7, 22.7, 0, 0, 0];
-    const descriptions = ["Increase logit softcap from 15", "Increase warmdown ratio from 0", "Increase scalar LR from 0.5 to", "Increase matrix LR from 0.08 t", "Increase unembedding LR from 0", "Increase warmup ratio from 0.0", "Increase warmup ratio from 0.0", "Lower softcap from 15 to 10", "Increase embedding LR from 1.0", "Lower matrix LR from 0.08 to 0", "Increase FINAL", "Halve batch size again: 2^18 \u2192", "Halve batch size further: 2^17", "Increase embedding LR from 0.6", "Compound: add 2% warmup + incr", "Reduce warmdown ratio from 0.6", "Reduce weight decay from 0.2 t", "Reduce weight decay from 0.1 t", "Reduce weight decay from 0.05 "];
+    const labels = ["#0 S10", "#1 S11", "#2 S12", "#3 S13", "#4 S14", "#5 S15", "#6 S16", "#7 S17", "#8 S18", "#9 S19", "#10 S20", "#11 S21", "#12 S2", "#13 S3", "#14 S4", "#15 S5", "#16 S6", "#17 S7", "#18 S8", "#19 S9"];
+    const bpbData = [1.044, 1.0401, 1.0401, 1.0413, 1.0468, 1.0387, 1.05, 1.0408, 1.0475, 1.0473, 1.0472, 1.0517, 1.0472, 1.0584, 1.0458, 1.0437, 1.0557, 1.042, 1.0395, 1.0437];
+    const stepsData = [1486, 1504, 1504, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1357, 2557, 1348, 1495, 1321, 1463, 1517, 1418];
+    const vramData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.7, 11.5, 22.7, 22.7, 22.7, 0, 0, 0];
+    const descriptions = ["Increase logit softcap from 15", "Increase warmdown ratio from 0", "Increase scalar LR from 0.5 to", "Increase matrix LR from 0.08 t", "Increase unembedding LR from 0", "Increase warmup ratio from 0.0", "Increase warmup ratio from 0.0", "Lower softcap from 15 to 10", "Increase embedding LR from 1.0", "Lower matrix LR from 0.08 to 0", "Increase FINAL", "Increase Adam beta1 from 0.8 t", "Halve batch size again: 2^18 \u2192", "Halve batch size further: 2^17", "Increase embedding LR from 0.6", "Compound: add 2% warmup + incr", "Reduce warmdown ratio from 0.6", "Reduce weight decay from 0.2 t", "Reduce weight decay from 0.1 t", "Reduce weight decay from 0.05 "];
     const bestBpb = Math.min(...bpbData);
 
     function bpbColors(data) {
