@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoresearch Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --orange: #d29922;
+      --purple: #bc8cff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p { color: var(--muted); font-size: 1.05rem; max-width: 720px; }
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .kpi-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.25rem; }
+    .kpi-value { font-size: 1.8rem; font-weight: 700; }
+    .kpi-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+    .kpi-value.green { color: var(--green); }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-card h3 { font-size: 1rem; margin-bottom: 1rem; font-weight: 600; }
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+    }
+    .table-card h3 { font-size: 1rem; margin-bottom: 1rem; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    thead th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    tbody td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(88,166,255,0.04); }
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-keep { background: rgba(63,185,80,0.15); color: var(--green); }
+    .badge-discard { background: rgba(248,81,73,0.15); color: var(--red); }
+    .badge-best { background: rgba(188,140,255,0.15); color: var(--purple); }
+    .findings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 768px) { .findings { grid-template-columns: 1fr; } }
+    .finding-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .finding-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .finding-card ul { list-style: none; padding: 0; }
+    .finding-card li {
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .finding-card li::before {
+      content: '\2192';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    .config-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .config-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .config-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .config-item .key { color: var(--muted); }
+    .config-item .val { color: var(--accent); font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Autoresearch Dashboard</h1>
+      <p>Autonomous GPT pretraining research using Karpathy's autoresearch framework. 5-minute training experiments on Modal A100-80GB GPUs, optimizing val_bpb (validation bits per byte).</p>
+    </header>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">Best val_bpb</div>
+        <div class="kpi-value green">1.0387</div>
+        <div class="kpi-sub">&darr; 0.5% from baseline</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Baseline val_bpb</div>
+        <div class="kpi-value">1.0440</div>
+        <div class="kpi-sub">Unmodified train.py</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Experiments Run</div>
+        <div class="kpi-value">17</div>
+        <div class="kpi-sub">Across 18 sessions</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Improvement</div>
+        <div class="kpi-value green">&minus;0.0053</div>
+        <div class="kpi-sub">val_bpb reduction</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">GPU</div>
+        <div class="kpi-value" style="font-size:1.4rem;">A100-80GB</div>
+        <div class="kpi-sub">Modal cloud</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>val_bpb Over Experiments</h3>
+        <canvas id="bpbChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Optimizer Steps per Experiment</h3>
+        <canvas id="stepsChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Peak VRAM Usage (GB)</h3>
+        <canvas id="vramChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>val_bpb vs Steps (Efficiency)</h3>
+        <canvas id="scatterChart"></canvas>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>All Experiments</h3>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Session</th><th>Description</th><th>val_bpb</th><th>Steps</th><th>VRAM</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0</td><td>10</td><td>Increase logit softcap from 15 to 30</td>
+            <td>1.0440</td><td>1486</td><td>—</td>
+            <td><span class="badge badge-keep">baseline</span></td>
+          </tr>
+          <tr>
+            <td>1</td><td>11</td><td>Increase warmdown ratio from 0.67 to 0.75</td>
+            <td>1.0401</td><td>1504</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>2</td><td>12</td><td>Increase scalar LR from 0.5 to 0.8</td>
+            <td>1.0401</td><td>1504</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>3</td><td>13</td><td>Increase matrix LR from 0.08 to 0.1</td>
+            <td>1.0413</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>4</td><td>14</td><td>Increase unembedding LR from 0.004 to 0.008</td>
+            <td>1.0468</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>5</td><td>15</td><td>Increase warmup ratio from 0.02 to 0.05</td>
+            <td style="color: var(--green); font-weight: 700;">1.0387</td><td>1</td><td>—</td>
+            <td><span class="badge badge-best">★ best</span></td>
+          </tr>
+          <tr>
+            <td>6</td><td>16</td><td>Increase warmup ratio from 0.05 to 0.08</td>
+            <td>1.0500</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>7</td><td>17</td><td>Lower softcap from 15 to 10</td>
+            <td>1.0408</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>8</td><td>18</td><td>Increase embedding LR from 1.0 to 1.5</td>
+            <td>1.0475</td><td>1</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>9</td><td>2</td><td>Halve batch size again: 2^18 → 2^17 with DEVICE</td>
+            <td>1.0472</td><td>1357</td><td>22.7 GB</td>
+            <td><span class="badge badge-keep">keep</span></td>
+          </tr>
+          <tr>
+            <td>10</td><td>3</td><td>Halve batch size further: 2^17 → 2^16 with DEVICE</td>
+            <td>1.0584</td><td>2557</td><td>11.5 GB</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>11</td><td>4</td><td>Increase embedding LR from 0.6 to 1.0</td>
+            <td>1.0458</td><td>1348</td><td>22.7 GB</td>
+            <td><span class="badge badge-keep">keep</span></td>
+          </tr>
+          <tr>
+            <td>12</td><td>5</td><td>Compound: add 2% warmup + increase matrix LR 0.06 → 0.08</td>
+            <td>1.0437</td><td>1495</td><td>22.7 GB</td>
+            <td><span class="badge badge-keep">keep</span></td>
+          </tr>
+          <tr>
+            <td>13</td><td>6</td><td>Reduce warmdown ratio from 0.67 to 0.5</td>
+            <td>1.0557</td><td>1321</td><td>22.7 GB</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+          <tr>
+            <td>14</td><td>7</td><td>Reduce weight decay from 0.2 to 0.1</td>
+            <td>1.0420</td><td>1463</td><td>—</td>
+            <td><span class="badge badge-keep">keep</span></td>
+          </tr>
+          <tr>
+            <td>15</td><td>8</td><td>Reduce weight decay from 0.1 to 0.05</td>
+            <td>1.0395</td><td>1517</td><td>—</td>
+            <td><span class="badge badge-keep">keep</span></td>
+          </tr>
+          <tr>
+            <td>16</td><td>9</td><td>Reduce weight decay from 0.05 to 0.025</td>
+            <td>1.0437</td><td>1418</td><td>—</td>
+            <td><span class="badge badge-discard">discard</span></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="findings">
+      <div class="finding-card">
+        <h3>What Worked</h3>
+        <ul>
+          <li>Increase warmup ratio from 0.02 to 0.05 → 1.0387</li>
+          <li>Halve batch size again: 2^18 → 2^17 with DEVICE → 1.0472</li>
+          <li>Increase embedding LR from 0.6 to 1.0 → 1.0458</li>
+          <li>Compound: add 2% warmup + increase matrix LR 0.06 → 0.08 → 1.0437</li>
+          <li>Reduce weight decay from 0.2 to 0.1 → 1.0420</li>
+          <li>Reduce weight decay from 0.1 to 0.05 → 1.0395</li>
+        </ul>
+      </div>
+      <div class="finding-card">
+        <h3>What Didn't Work</h3>
+        <ul>
+          <li>Increase logit softcap from 15 to 30 → 1.0440</li>
+          <li>Increase warmdown ratio from 0.67 to 0.75 → 1.0401</li>
+          <li>Increase scalar LR from 0.5 to 0.8 → 1.0401</li>
+          <li>Increase matrix LR from 0.08 to 0.1 → 1.0413</li>
+          <li>Increase unembedding LR from 0.004 to 0.008 → 1.0468</li>
+          <li>Increase warmup ratio from 0.05 to 0.08 → 1.0500</li>
+          <li>Lower softcap from 15 to 10 → 1.0408</li>
+          <li>Increase embedding LR from 1.0 to 1.5 → 1.0475</li>
+          <li>Halve batch size further: 2^17 → 2^16 with DEVICE → 1.0584</li>
+          <li>Reduce warmdown ratio from 0.67 to 0.5 → 1.0557</li>
+          <li>Reduce weight decay from 0.05 to 0.025 → 1.0437</li>
+        </ul>
+      </div>
+      <div class="finding-card" style="grid-column: span 2;">
+        <h3>Next Experiments</h3>
+        <ul>
+          <li>Increase softcap (15 → 30) — may help with logit saturation</li>
+          <li>Try higher embedding LR (1.0 → 1.5)</li>
+          <li>Try 10 layers with smaller aspect ratio (e.g., aspect=48 → 480 dim, ~40M params)</li>
+          <li>Increase warmdown ratio (0.67 → 0.75)</li>
+          <li>Try scalar LR tuning (0.5 → 0.8)</li>
+          <li>Try matrix LR 0.1 (push optimizer harder)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="config-card">
+      <h3>Current Best Configuration</h3>
+      <div class="config-grid">
+        <div class="config-item"><span class="key">Rationale</span><span class="val">Sessions 7 and 8 showed successive improvements from reducing weight decay (0.2→0.1→0.05), suggesting the model benefits from less regularization in short 5-minute runs. This experiment pushes further to see if 0.025 continues the trend.</span></div>
+        <div class="config-item"><span class="key">EMBEDDING_LR</span><span class="val">1.0</span></div>
+        <div class="config-item"><span class="key">UNEMBEDDING_LR</span><span class="val">0.004</span></div>
+        <div class="config-item"><span class="key">MATRIX_LR</span><span class="val">0.08</span></div>
+        <div class="config-item"><span class="key">SCALAR_LR</span><span class="val">0.5</span></div>
+        <div class="config-item"><span class="key">WARMUP_RATIO</span><span class="val">0.02</span></div>
+        <div class="config-item"><span class="key">WARMDOWN_RATIO</span><span class="val">0.67</span></div>
+        <div class="config-item"><span class="key">WEIGHT_DECAY</span><span class="val">0.05</span></div>
+        <div class="config-item"><span class="key">DEPTH</span><span class="val">8, ASPECT_RATIO = 64</span></div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Autoresearch Dashboard &middot; Auto-generated 2026-03-14 &middot; Built on Sundial</p>
+    </footer>
+  </div>
+
+  <script>
+    Chart.defaults.color = '#8b949e';
+    Chart.defaults.borderColor = '#30363d';
+    Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+
+    const labels = ["#0 S10", "#1 S11", "#2 S12", "#3 S13", "#4 S14", "#5 S15", "#6 S16", "#7 S17", "#8 S18", "#9 S2", "#10 S3", "#11 S4", "#12 S5", "#13 S6", "#14 S7", "#15 S8", "#16 S9"];
+    const bpbData = [1.044, 1.0401, 1.0401, 1.0413, 1.0468, 1.0387, 1.05, 1.0408, 1.0475, 1.0472, 1.0584, 1.0458, 1.0437, 1.0557, 1.042, 1.0395, 1.0437];
+    const stepsData = [1486, 1504, 1504, 1, 1, 1, 1, 1, 1, 1357, 2557, 1348, 1495, 1321, 1463, 1517, 1418];
+    const vramData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 22.7, 11.5, 22.7, 22.7, 22.7, 0, 0, 0];
+    const descriptions = ["Increase logit softcap from 15", "Increase warmdown ratio from 0", "Increase scalar LR from 0.5 to", "Increase matrix LR from 0.08 t", "Increase unembedding LR from 0", "Increase warmup ratio from 0.0", "Increase warmup ratio from 0.0", "Lower softcap from 15 to 10", "Increase embedding LR from 1.0", "Halve batch size again: 2^18 \u2192", "Halve batch size further: 2^17", "Increase embedding LR from 0.6", "Compound: add 2% warmup + incr", "Reduce warmdown ratio from 0.6", "Reduce weight decay from 0.2 t", "Reduce weight decay from 0.1 t", "Reduce weight decay from 0.05 "];
+    const bestBpb = Math.min(...bpbData);
+
+    function bpbColors(data) {
+      return data.map(v => v === bestBpb ? '#3fb950' : (v > bpbData[0] ? '#f85149' : '#58a6ff'));
+    }
+
+    // val_bpb line
+    new Chart(document.getElementById('bpbChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'val_bpb',
+          data: bpbData,
+          borderColor: '#58a6ff',
+          backgroundColor: 'rgba(88,166,255,0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 6,
+          pointBackgroundColor: bpbColors(bpbData),
+          pointBorderColor: bpbColors(bpbData),
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'val_bpb: ' + ctx.parsed.y.toFixed(4) } } },
+        scales: {
+          y: { grid: { color: 'rgba(48,54,61,0.5)' }, title: { display: true, text: 'val_bpb (lower is better)', color: '#8b949e' } },
+          x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+
+    // Steps bar
+    new Chart(document.getElementById('stepsChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Steps',
+          data: stepsData,
+          backgroundColor: 'rgba(188,140,255,0.5)',
+          borderColor: '#bc8cff',
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: 'rgba(48,54,61,0.5)' }, title: { display: true, text: 'Optimizer Steps', color: '#8b949e' } },
+          x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+
+    // VRAM bar
+    new Chart(document.getElementById('vramChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Peak VRAM (GB)',
+          data: vramData,
+          backgroundColor: vramData.map(v => v > 60 ? 'rgba(248,81,73,0.5)' : v > 40 ? 'rgba(210,153,34,0.5)' : 'rgba(63,185,80,0.5)'),
+          borderColor: vramData.map(v => v > 60 ? '#f85149' : v > 40 ? '#d29922' : '#3fb950'),
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: 'rgba(48,54,61,0.5)' }, title: { display: true, text: 'VRAM (GB)', color: '#8b949e' } },
+          x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+
+    // Scatter: bpb vs steps
+    new Chart(document.getElementById('scatterChart'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Experiments',
+          data: stepsData.map((s, i) => ({ x: s, y: bpbData[i] })),
+          backgroundColor: bpbColors(bpbData),
+          pointRadius: 8,
+          pointHoverRadius: 10,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => descriptions[ctx.dataIndex] + ' | bpb: ' + ctx.parsed.y.toFixed(4) + ' | steps: ' + ctx.parsed.x
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(48,54,61,0.5)' }, title: { display: true, text: 'Optimizer Steps', color: '#8b949e' } },
+          y: { grid: { color: 'rgba(48,54,61,0.5)' }, title: { display: true, text: 'val_bpb', color: '#8b949e' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
