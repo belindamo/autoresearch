@@ -24,3 +24,4 @@ Autonomous GPT pretraining research using Karpathy's autoresearch framework. We 
 - **Session 20 (2026-03-14):** Increased FINAL*LR*FRAC 0.0→0.01 — val_bpb=1.0472 ✗ regressed, full annealing to zero is important for warmdown convergence. Full log
 - **Session 21 (2026-03-14):** Increased Adam beta1 0.8→0.9 — val_bpb=1.0517 ✗ regressed, higher momentum too sluggish for short training; beta1=0.8 is well-calibrated. Full log
 - **Session 22 (2026-03-14):** Increased x0*lambda init 0.1→0.15 — val*bpb=1.0484 ✗ regressed, stronger skip connections dilute residual stream; init=0.1 is well-calibrated. Full log
+- **Session 23 (2026-03-14):** Reduced Muon momentum target 0.95→0.90 — val*bpb=1.0470 ✗ regressed vs 1.0387 best, though at same-throughput comparison it's neutral. Also reverted unlogged beta2/x0*lambda commits. Notable GPU variance: session 15's best (1.0387) was at 1560 steps/16.35% MFU vs typical ~1340 steps/14% MFU. Full log
