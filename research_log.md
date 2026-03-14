@@ -20,3 +20,5 @@ Autonomous GPT pretraining research using Karpathy's autoresearch framework. We 
 - **Session 16 (2026-03-14):** Increased warmup ratio 0.05→0.08 — val_bpb=1.0500 ✗ regressed, too much warmup eats into effective training time; 0.05 is the sweet spot. Full log
 - **Session 17 (2026-03-14):** Lowered softcap 15→10 — val_bpb=1.0408 ✗ regressed, tighter logit clamping too restrictive; softcap=15 is optimal (both 10 and 30 are worse). Full log
 - **Session 18 (2026-03-14):** Increased embedding LR 1.0→1.5 — val_bpb=1.0475 ✗ regressed, embeddings overshoot at higher LR; 1.0 is optimal (0.6 < 1.0 > 1.5). Full log
+- **Session 19 (2026-03-14):** Lowered matrix LR 0.08→0.07 — val_bpb=1.0473 ✗ regressed, Muon LR=0.08 confirmed optimal from both sides (0.07 < 0.08 > 0.1). Full log
+- **Session 20 (2026-03-14):** Increased FINAL*LR*FRAC 0.0→0.01 — val_bpb=1.0472 ✗ regressed, full annealing to zero is important for warmdown convergence. Full log
