@@ -1,0 +1,10 @@
+# System / platform
+.claude-homes/
+.logs/
+.mirror_state.json
+.npm/
+.sundial/
+__pycache__/
+
+# Autoresearch has its own git repo
+autoresearch/
