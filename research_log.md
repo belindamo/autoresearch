@@ -30,3 +30,4 @@ Autonomous GPT pretraining research using Karpathy's autoresearch framework. We 
 - **Session 26 (2026-03-15):** Reduced x0*lambda init 0.1→0.05 — val*bpb=1.0487 ✗ regressed, completing the map: 0.05→1.0487, **0.10→best**, 0.15→1.0484; x0_lambda=0.1 confirmed optimal. Full log
 - **Session 27 (2026-03-15):** Increased RoPE base frequency 10000→50000 — val*bpb=1.0405 ✗ marginal regression (0.0018), near-neutral; model insensitive to RoPE base at seq*len=2048. Full log
 - **Session 28 (2026-03-15):** Muon ns*steps 5→6 (no-op: only 5 coefficients exist) — val*bpb=1.0492, effectively a baseline re-run confirming ~0.01 GPU variance between allocations. Full log
+- **Session 29 (2026-03-15):** Window pattern SSSL→SSL (more full-context layers, 25%→37.5%) — val*bpb=1.0492 ✗ regressed, neutral throughput but no quality gain; SSSL is optimal at seq*len=2048. Full log
