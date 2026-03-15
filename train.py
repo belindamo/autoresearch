@@ -286,7 +286,7 @@ class GPT(nn.Module):
 
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1),
-                                   ignore_index=-1, reduction=reduction)
+                                   ignore_index=-1, reduction=reduction, label_smoothing=0.05)
             return loss
         return logits
 
@@ -505,15 +505,7 @@ optimizer = model.setup_optimizer(
     weight_decay=WEIGHT_DECAY,
 )
 
-# EMA: maintain exponential moving average of model weights for eval
-EMA_DECAY = 0.999
-_orig_model = model
-ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
-
-model = torch.compile(model, dynamic=False)
-
-train_loader = make_dataloader(tokenizer, DEVICE_BATCH_SIZE, MAX_SEQ_LEN, "train")
-x, y, epoch = next(train_loader)  # prefetch first batch
+t batch
 
 print(f"Time budget: {TIME_BUDGET}s")
 print(f"Gradient accumulation steps: {grad_accum_steps}")
@@ -574,12 +566,7 @@ while True:
         for n, p in _orig_model.named_parameters():
             ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
 
-    train_loss_f = train_loss.item()
-
-    # Fast fail: abort if loss is exploding or NaN
-    if math.isnan(train_loss_f) or train_loss_f > 100:
-        print("FAIL")
-        exit(1)
+    train_loss_f = train_loss.i
 
     torch.cuda.synchronize()
     t1 = time.time()
@@ -616,11 +603,6 @@ while True:
 print()  # newline after \r training log
 
 total_tokens = step * TOTAL_BATCH_SIZE
-
-# Swap in EMA weights for eval
-with torch.no_grad():
-    for n, p in _orig_model.named_parameters():
-        p.data.copy_(ema_state[n])
 
 # Final eval
 model.eval()
