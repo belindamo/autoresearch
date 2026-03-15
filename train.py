@@ -506,7 +506,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: maintain exponential moving average of model weights for eval
-EMA_DECAY = 0.995
+EMA_DECAY = 0.999
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
