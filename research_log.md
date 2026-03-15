@@ -28,3 +28,4 @@ Autonomous GPT pretraining research using Karpathy's autoresearch framework. We 
 - **Session 24 (2026-03-14):** Reduced warmdown ratio 0.67→0.60 — val_bpb=1.0491 ✗ regressed, completing the warmdown map: 0.50→1.0557, 0.60→1.0491, **0.67→best**, 0.75→1.0401. Full log
 - **Session 25 (2026-03-15):** Increased depth 8→10 (85.9M params, 811 steps) — val_bpb=1.0610 ✗ regressed, larger model gets too few training steps in 5 min to converge; depth 8 is optimal for this time budget. Full log
 - **Session 26 (2026-03-15):** Reduced x0*lambda init 0.1→0.05 — val*bpb=1.0487 ✗ regressed, completing the map: 0.05→1.0487, **0.10→best**, 0.15→1.0484; x0_lambda=0.1 confirmed optimal. Full log
+- **Session 27 (2026-03-15):** Increased RoPE base frequency 10000→50000 — val*bpb=1.0405 ✗ marginal regression (0.0018), near-neutral; model insensitive to RoPE base at seq*len=2048. Full log
