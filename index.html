@@ -184,7 +184,7 @@
       <div class="kpi">
         <div class="kpi-label">Experiments Run</div>
         <div class="kpi-value">31</div>
-        <div class="kpi-sub">Across 32 sessions</div>
+        <div class="kpi-sub">Across 33 sessions</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Improvement</div>
@@ -340,8 +340,8 @@
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
           <tr>
-            <td>23</td><td>32</td><td>1.0387</td>
-            <td>1.0538</td><td>1203</td><td>—</td>
+            <td>23</td><td>33</td><td>1.0387</td>
+            <td>1.0679</td><td>1275</td><td>—</td>
             <td><span class="badge badge-discard">discard</span></td>
           </tr>
           <tr>
@@ -420,7 +420,7 @@
           <li>Change window pattern from "SSSL" to "SSL" — more full-context attention layers → 1.0492</li>
           <li>Increase ASPECT_RATIO 64→72 — wider model (512→640 dim, 4→5 heads) → 1.0521</li>
           <li>1.0387 → 1.0437</li>
-          <li>1.0387 → 1.0538</li>
+          <li>1.0387 → 1.0679</li>
           <li>Halve batch size further: 2^17 → 2^16 with DEVICE → 1.0584</li>
           <li>Reduce warmdown ratio from 0.67 to 0.5 → 1.0557</li>
           <li>Reduce weight decay from 0.05 to 0.025 → 1.0437</li>
@@ -464,9 +464,9 @@
     Chart.defaults.borderColor = '#30363d';
     Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 
-    const labels = ["#0 S10", "#1 S11", "#2 S12", "#3 S13", "#4 S14", "#5 S15", "#6 S16", "#7 S17", "#8 S18", "#9 S19", "#10 S20", "#11 S21", "#12 S22", "#13 S23", "#14 S24", "#15 S25", "#16 S26", "#17 S27", "#18 S28", "#19 S29", "#20 S2", "#21 S30", "#22 S31", "#23 S32", "#24 S3", "#25 S4", "#26 S5", "#27 S6", "#28 S7", "#29 S8", "#30 S9"];
-    const bpbData = [1.044, 1.0401, 1.0401, 1.0413, 1.0468, 1.0387, 1.05, 1.0408, 1.0475, 1.0473, 1.0472, 1.0517, 1.0484, 1.047, 1.0491, 1.061, 1.0487, 1.0405, 1.0492, 1.0492, 1.0472, 1.0521, 1.0437, 1.053804, 1.0584, 1.0458, 1.0437, 1.0557, 1.042, 1.0395, 1.0437];
-    const stepsData = [1486, 1504, 1504, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 811, 1, 1, 1, 1, 1357, 999, 1468, 1203, 2557, 1348, 1495, 1321, 1463, 1517, 1418];
+    const labels = ["#0 S10", "#1 S11", "#2 S12", "#3 S13", "#4 S14", "#5 S15", "#6 S16", "#7 S17", "#8 S18", "#9 S19", "#10 S20", "#11 S21", "#12 S22", "#13 S23", "#14 S24", "#15 S25", "#16 S26", "#17 S27", "#18 S28", "#19 S29", "#20 S2", "#21 S30", "#22 S31", "#23 S33", "#24 S3", "#25 S4", "#26 S5", "#27 S6", "#28 S7", "#29 S8", "#30 S9"];
+    const bpbData = [1.044, 1.0401, 1.0401, 1.0413, 1.0468, 1.0387, 1.05, 1.0408, 1.0475, 1.0473, 1.0472, 1.0517, 1.0484, 1.047, 1.0491, 1.061, 1.0487, 1.0405, 1.0492, 1.0492, 1.0472, 1.0521, 1.0437, 1.0679, 1.0584, 1.0458, 1.0437, 1.0557, 1.042, 1.0395, 1.0437];
+    const stepsData = [1486, 1504, 1504, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 811, 1, 1, 1, 1, 1357, 999, 1468, 1275, 2557, 1348, 1495, 1321, 1463, 1517, 1418];
     const vramData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.7, 0, 0, 0, 11.5, 22.7, 22.7, 22.7, 0, 0, 0];
     const descriptions = ["Increase logit softcap from 15", "Increase warmdown ratio from 0", "Increase scalar LR from 0.5 to", "Increase matrix LR from 0.08 t", "Increase unembedding LR from 0", "Increase warmup ratio from 0.0", "Increase warmup ratio from 0.0", "Lower softcap from 15 to 10", "Increase embedding LR from 1.0", "Lower matrix LR from 0.08 to 0", "Increase FINAL", "Increase Adam beta1 from 0.8 t", "Increase x0_lambda init from 0", "Reduce Muon Nesterov momentum ", "Reduce warmdown ratio from 0.6", "Increase depth from 8 to 10 (A", "Reduce x0_lambda init from 0.1", "Increase RoPE base frequency f", "Increase Muon ns_steps from 5 ", "Change window pattern from \"SS", "Halve batch size again: 2^18 \u2192", "Increase ASPECT_RATIO 64\u219272 \u2014 ", "1.0387", "1.0387", "Halve batch size further: 2^17", "Increase embedding LR from 0.6", "Compound: add 2% warmup + incr", "Reduce warmdown ratio from 0.6", "Reduce weight decay from 0.2 t", "Reduce weight decay from 0.1 t", "Reduce weight decay from 0.05 "];
     const bestBpb = Math.min(...bpbData);
