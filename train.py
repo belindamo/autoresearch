@@ -99,16 +99,12 @@ class CausalSelfAttention(nn.Module):
 class MLP(nn.Module):
     def __init__(self, config):
         super().__init__()
-        # SwiGLU MLP: param-matched with standard 4x ReLU² MLP
-        # Standard: 2 * 4d² = 8d² params. SwiGLU: 3 * h * d params. Match: h = 8d/3
-        hidden_dim = int(round(8 * config.n_embd / 3 / 128)) * 128  # round to multiple of 128
-        self.c_gate_up = nn.Linear(config.n_embd, 2 * hidden_dim, bias=False)
-        self.c_proj = nn.Linear(hidden_dim, config.n_embd, bias=False)
+        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd, bias=False)
+        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd, bias=False)
 
     def forward(self, x):
-        gate_up = self.c_gate_up(x)
-        gate, up = gate_up.chunk(2, dim=-1)
-        x = F.silu(gate) * up
+        x = self.c_fc(x)
+        x = F.relu(x).square()
         x = self.c_proj(x)
         return x
 
@@ -163,7 +159,7 @@ class GPT(nn.Module):
             torch.nn.init.uniform_(block.attn.c_k.weight, -s, s)
             torch.nn.init.uniform_(block.attn.c_v.weight, -s, s)
             torch.nn.init.zeros_(block.attn.c_proj.weight)
-            torch.nn.init.uniform_(block.mlp.c_gate_up.weight, -s, s)
+            torch.nn.init.uniform_(block.mlp.c_fc.weight, -s, s)
             torch.nn.init.zeros_(block.mlp.c_proj.weight)
         # Per-layer scalars
         self.resid_lambdas.fill_(1.0)
@@ -510,7 +506,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: exponential moving average of model weights for eval
-EMA_DECAY = 0.995
+EMA_DECAY = 0.99
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
