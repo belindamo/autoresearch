@@ -505,6 +505,11 @@ optimizer = model.setup_optimizer(
     weight_decay=WEIGHT_DECAY,
 )
 
+# EMA: exponential moving average of model weights for eval
+EMA_DECAY = 0.99
+_orig_model = model
+ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
+
 model = torch.compile(model, dynamic=False)
 
 train_loader = make_dataloader(tokenizer, DEVICE_BATCH_SIZE, MAX_SEQ_LEN, "train")
@@ -564,6 +569,11 @@ while True:
     optimizer.step()
     model.zero_grad(set_to_none=True)
 
+    # EMA update
+    with torch.no_grad():
+        for n, p in _orig_model.named_parameters():
+            ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
+
     train_loss_f = train_loss.item()
 
     # Fast fail: abort if loss is exploding or NaN
@@ -606,6 +616,11 @@ while True:
 print()  # newline after \r training log
 
 total_tokens = step * TOTAL_BATCH_SIZE
+
+# Swap in EMA weights for eval
+with torch.no_grad():
+    for n, p in _orig_model.named_parameters():
+        p.data.copy_(ema_state[n])
 
 # Final eval
 model.eval()
