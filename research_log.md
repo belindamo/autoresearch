@@ -32,3 +32,5 @@ Autonomous GPT pretraining research using Karpathy's autoresearch framework. We 
 - **Session 28 (2026-03-15):** Muon ns*steps 5→6 (no-op: only 5 coefficients exist) — val*bpb=1.0492, effectively a baseline re-run confirming ~0.01 GPU variance between allocations. Full log
 - **Session 29 (2026-03-15):** Window pattern SSSL→SSL (more full-context layers, 25%→37.5%) — val*bpb=1.0492 ✗ regressed, neutral throughput but no quality gain; SSSL is optimal at seq*len=2048. Full log
 - **Session 30 (2026-03-15):** Increased ASPECT*RATIO 64→72 (wider model 512→640 dim, 70.8M params) — val*bpb=1.0521 ✗ regressed, 25% fewer steps (999 vs 1340); model too large for 5-min budget. Full log
+- **Session 31 (2026-03-15):** Six experiments: Adam beta1=0.7, HEAD_DIM=64, scalar_lr=0.3, cosine warmdown, SiLU activation, Muon beta2=0.99 — all regressed. Model deeply optimized for this time budget. Full log
+- **Session 32 (2026-03-16):** Depth 9 at same width 512 (1.054 ✗), weight tying (4.68 ✗ catastrophic — dual LR incompatible), z-loss regularization (1.058 ✗ redundant with softcap), WD=0.04 (infra timeout). Best val_bpb unchanged at **1.0387**. Full log
