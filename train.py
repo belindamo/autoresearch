@@ -130,7 +130,7 @@ class GPT(nn.Module):
             "wte": nn.Embedding(config.vocab_size, config.n_embd),
             "h": nn.ModuleList([Block(config, i) for i in range(config.n_layer)]),
         })
-        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=True)
+        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
         self.resid_lambdas = nn.Parameter(torch.ones(config.n_layer))
         self.x0_lambdas = nn.Parameter(torch.zeros(config.n_layer))
         # Value embeddings
