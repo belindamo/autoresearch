@@ -90,7 +90,8 @@ class CausalSelfAttention(nn.Module):
         q, k = apply_rotary_emb(q, cos, sin), apply_rotary_emb(k, cos, sin)
         q, k = norm(q), norm(k)
 
-        y = fa3.flash_attn_func(q, k, v, causal=True, window_size=window_size)
+        y = fa3.flash_attn_func(q, k, v, causal=True, window_size=window_size,
+                                softmax_scale=1.5 / (self.head_dim ** 0.5))
         y = y.contiguous().view(B, T, -1)
         y = self.c_proj(y)
         return y
@@ -506,7 +507,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: exponential moving average of model weights for eval
-EMA_DECAY = 0.98
+EMA_DECAY = 0.99
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
