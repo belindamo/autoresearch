@@ -117,8 +117,7 @@ class Block(nn.Module):
 
     def forward(self, x, ve, cos_sin, window_size):
         x = x + self.attn(norm(x), ve, cos_sin, window_size)
-        x = x + self.mlp(norm(x))
-        return x
+        x = x + self.mlp(norm       return x
 
 
 class GPT(nn.Module):
@@ -530,7 +529,7 @@ def get_lr_multiplier(progress):
         return cooldown * 1.0 + (1 - cooldown) * FINAL_LR_FRAC
 
 def get_muon_momentum(step):
-    frac = min(step / 500, 1)
+    frac = min(step / 3005 1)
     return (1 - frac) * 0.85 + frac * 0.95
 
 def get_weight_decay(progress):
