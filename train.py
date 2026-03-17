@@ -556,6 +556,9 @@ while True:
         loss.backward()
         x, y, epoch = next(train_loader)
 
+    # Gradient clipping
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
     # Progress and schedules
     progress = min(total_training_time / TIME_BUDGET, 1.0)
     lrm = get_lr_multiplier(progress)
