@@ -506,7 +506,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: exponential moving average of model weights for eval
-EMA_DECAY = 0.99
+EMA_DECAY = 0.98
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
@@ -534,7 +534,7 @@ def get_muon_momentum(step):
     return (1 - frac) * 0.85 + frac * 0.95
 
 def get_weight_decay(progress):
-    return WEIGHT_DECAY * get_lr_multiplier(progress)
+    return WEIGHT_DECAY * (1 - progress)
 
 # ---------------------------------------------------------------------------
 # Training loop
