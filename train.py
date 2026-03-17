@@ -285,8 +285,9 @@ class GPT(nn.Module):
         logits = softcap * torch.tanh(logits / softcap)
 
         if targets is not None:
+            ls = 0.1 if self.training else 0.0
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1),
-                                   ignore_index=-1, reduction=reduction)
+                                   ignore_index=-1, reduction=reduction, label_smoothing=ls)
             return loss
         return logits
 
