@@ -506,8 +506,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: exponential moving average of model weights for eval
-EMA_DECAY_START = 0.95
-EMA_DECAY_END = 0.999
+EMA_DECAY = 0.99
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
@@ -570,11 +569,10 @@ while True:
     optimizer.step()
     model.zero_grad(set_to_none=True)
 
-    # EMA update (scheduled: ramp decay from 0.95 to 0.999 over training)
-    ema_decay = EMA_DECAY_START + (EMA_DECAY_END - EMA_DECAY_START) * progress
+    # EMA update
     with torch.no_grad():
         for n, p in _orig_model.named_parameters():
-            ema_state[n].lerp_(p.data, 1 - ema_decay)
+            ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
 
     train_loss_f = train_loss.item()
 
