@@ -117,7 +117,9 @@ class Block(nn.Module):
 
     def forward(self, x, ve, cos_sin, window_size):
         x = x + self.attn(norm(x), ve, cos_sin, window_size)
-        x = x + self.mlp(norm       return x
+        x = x + self.mlp(norm(x))
+ (x))
+        return x
 
 
 class GPT(nn.Module):
@@ -533,7 +535,7 @@ def get_muon_momentum(step):
     return (1 - frac) * 0.85 + frac * 0.95
 
 def get_weight_decay(progress):
-    return WEIGHT_DECAY * (1 - progress)
+    return WEIGHT_DECAY
 
 # ---------------------------------------------------------------------------
 # Training loop
