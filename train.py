@@ -550,7 +550,9 @@ while True:
     t0 = time.time()
     for micro_step in range(grad_accum_steps):
         with autocast_ctx:
-            loss = model(x, y)
+            logits = model(x)
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1),
+                                   ignore_index=-1, label_smoothing=0.05)
         train_loss = loss.detach()
         loss = loss / grad_accum_steps
         loss.backward()
