@@ -527,7 +527,7 @@ def get_lr_multiplier(progress):
         return 1.0
     else:
         cooldown = (1.0 - progress) / WARMDOWN_RATIO
-        return cooldown * 1.0 + (1 - cooldown) * FINAL_LR_FRAC
+        return cooldown**0.5 * 1.0 + (1 - cooldown**0.5) * FINAL_LR_FRAC
 
 def get_muon_momentum(step):
     frac = min(step / 300, 1)
