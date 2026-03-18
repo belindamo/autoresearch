@@ -506,7 +506,7 @@ optimizer = model.setup_optimizer(
 )
 
 # EMA: exponential moving average of model weights for eval
-EMA_DECAY = 0.9933
+EMA_DECAY = 0.993
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
@@ -526,7 +526,11 @@ def get_lr_multiplier(progress):
     elif progress < 1.0 - WARMDOWN_RATIO:
         return 1.0
     else:
-        cooldown = (1.0 - progress) / WARMDOWN_RATIO    frac = min(step / 300, 1)
+        cooldown = (1.0 - progress) / WARMDOWN_RATIO
+        return cooldown * 1.0 + (1 - cooldown) * FINAL_LR_FRAC
+
+def get_muon_momentum(step):
+    frac = min(step / 300, 1)
     return (1 - frac) * 0.85 + frac * 0.95
 
 def get_weight_decay(progress):
