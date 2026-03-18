@@ -510,7 +510,7 @@ EMA_DECAY = 0.99
 _orig_model = model
 ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
 
-model = torch.compile(model, dynamic=False, mode="max-autotune-no-cudagraphs")
+model = torch.compile(model, dynamic=False)
 
 train_loader = make_dataloader(tokenizer, DEVICE_BATCH_SIZE, MAX_SEQ_LEN, "train")
 x, y, epoch = next(train_loader)  # prefetch first batch
