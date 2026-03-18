@@ -620,10 +620,10 @@ print()  # newline after \r training log
 
 total_tokens = step * TOTAL_BATCH_SIZE
 
-# Swap in EMA weights for eval
-with torch.no_grad():
-    for n, p in _orig_model.named_parameters():
-        p.data.copy_(ema_state[n])
+# Skip EMA swap: use raw weights after full warmdown to LR=0
+# with torch.no_grad():
+#     for n, p in _orig_model.named_parameters():
+#         p.data.copy_(ema_state[n])
 
 # Final eval
 model.eval()
