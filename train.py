@@ -572,10 +572,14 @@ while True:
     optimizer.step()
     model.zero_grad(set_to_none=True)
 
-    # EMA update
+    # EMA update: only average during warmdown (avoid polluting with early-training weights)
     with torch.no_grad():
-        for n, p in _orig_model.named_parameters():
-            ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
+        if progress >= 1.0 - WARMDOWN_RATIO:
+            for n, p in _orig_model.named_parameters():
+                ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
+        else:
+            for n, p in _orig_model.named_parameters():
+                ema_state[n].copy_(p.data)
 
     train_loss_f = train_loss.item()
 
