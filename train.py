@@ -572,10 +572,10 @@ while True:
     optimizer.step()
     model.zero_grad(set_to_none=True)
 
-    # EMA update
-    with torch.no_grad():
-        for n, p in _orig_model.named_parameters():
-            ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
+    # EMA update (disabled — using raw weights after warmdown)
+    # with torch.no_grad():
+    #     for n, p in _orig_model.named_parameters():
+    #         ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
 
     train_loss_f = train_loss.item()
 
@@ -620,10 +620,10 @@ print()  # newline after \r training log
 
 total_tokens = step * TOTAL_BATCH_SIZE
 
-# Swap in EMA weights for eval
-with torch.no_grad():
-    for n, p in _orig_model.named_parameters():
-        p.data.copy_(ema_state[n])
+# EMA weight swap disabled — evaluating raw weights after full warmdown
+# with torch.no_grad():
+#     for n, p in _orig_model.named_parameters():
+#         p.data.copy_(ema_state[n])
 
 # Final eval
 model.eval()
