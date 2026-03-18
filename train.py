@@ -505,10 +505,10 @@ optimizer = model.setup_optimizer(
     weight_decay=WEIGHT_DECAY,
 )
 
-# EMA: exponential moving average of model weights for eval
-EMA_DECAY = 0.99
+# EMA disabled: after full warmdown to LR=0, raw weights are well-converged
+EMA_DECAY = None
 _orig_model = model
-ema_state = {n: p.data.clone() for n, p in model.named_parameters()}
+ema_state = None
 
 model = torch.compile(model, dynamic=False)
 
@@ -572,10 +572,10 @@ while True:
     optimizer.step()
     model.zero_grad(set_to_none=True)
 
-    # EMA update
-    with torch.no_grad():
-        for n, p in _orig_model.named_parameters():
-            ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
+    # EMA update (disabled)
+    # with torch.no_grad():
+    #     for n, p in _orig_model.named_parameters():
+    #         ema_state[n].lerp_(p.data, 1 - EMA_DECAY)
 
     train_loss_f = train_loss.item()
 
@@ -620,10 +620,7 @@ print()  # newline after \r training log
 
 total_tokens = step * TOTAL_BATCH_SIZE
 
-# Swap in EMA weights for eval
-with torch.no_grad():
-    for n, p in _orig_model.named_parameters():
-        p.data.copy_(ema_state[n])
+# EMA disabled — use raw weights for eval (no swap needed)
 
 # Final eval
 model.eval()
