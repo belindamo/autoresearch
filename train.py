@@ -45,8 +45,8 @@ def norm(x):
 
 
 def has_ve(layer_idx, n_layer):
-    """Returns True if layer should have Value Embedding (alternating, last always included)."""
-    return layer_idx % 2 == (n_layer - 1) % 2
+    """Returns True if layer should have Value Embedding (last 2 layers only)."""
+    return layer_idx >= n_layer - 2
 
 
 def apply_rotary_emb(x, cos, sin):
@@ -447,7 +447,7 @@ WARMDOWN_RATIO = 0.67   # fraction of time budget for LR warmdown
 FINAL_LR_FRAC = 0.0     # final LR as fraction of initial
 
 # Model size
-DEPTH = 8               # number of transformer layers
+DEPTH = 7               # number of transformer layers
 DEVICE_BATCH_SIZE = 64   # per-device batch size (reduce if OOM)
 
 # ---------------------------------------------------------------------------
