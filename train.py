@@ -163,7 +163,10 @@ class GPT(nn.Module):
             torch.nn.init.zeros_(block.mlp.c_proj.weight)
         # Per-layer scalars
         self.resid_lambdas.fill_(1.0)
-        self.x0_lambdas.fill_(0.1)
+        # x0_lambda: linearly decay from 0.15 (layer 0) to 0.05 (last layer)
+        n_layer = self.config.n_layer
+        for i in range(n_layer):
+            self.x0_lambdas.data[i] = 0.15 - 0.1 * (i / max(n_layer - 1, 1))
         # Value embeddings
         for ve in self.value_embeds.values():
             torch.nn.init.uniform_(ve.weight, -s, s)
