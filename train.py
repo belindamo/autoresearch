@@ -529,6 +529,8 @@ def get_lr_multiplier(progress):
         cooldown = (1.0 - progress) / WARMDOWN_RATIO
         # Quadratic warmdown: faster LR decay, more time at low LR for convergence
         cooldown = cooldown ** 2
+        # Quadratic warmdown: faster LR decay, more time at low LR for convergence
+        cooldown = cooldown ** 2
         return cooldown * 1.0 + (1 - cooldown) * FINAL_LR_FRAC
 
 def get_muon_momentum(step):
