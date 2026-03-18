@@ -534,7 +534,10 @@ def get_muon_momentum(step):
     return (1 - frac) * 0.85 + frac * 0.95
 
 def get_weight_decay(progress):
-    return WEIGHT_DECAY
+    if progress < 1.0 - WARMDOWN_RATIO:
+        return WEIGHT_DECAY
+    cooldown = (1.0 - progress) / WARMDOWN_RATIO
+    return WEIGHT_DECAY * cooldown
 
 # ---------------------------------------------------------------------------
 # Training loop
